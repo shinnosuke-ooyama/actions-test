@@ -7,21 +7,28 @@ name: CI
 on:
   push:
     branches: [ master ]
-
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
   # This workflow contains a single job called "build"
-  build:
+  mirror:
     # The type of runner that the job will run on
     runs-on: ubuntu-latest
-
-    # Steps represent a sequence of tasks that will be executed as part of the job
+    env:
+      MIRROR_REPOSITORY: git@github.com:shinnosuke-ooyama/actions-test-mirror.git
+      GIT_NAME: Shinnosuke Ooyama
+      GIT_EMAIL: shinnosuke_oyama@citycom.co.jp
     steps:
-    # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
     - uses: actions/checkout@v2
-
-    # Runs a single command using the runners shell
-    - name: step 0
+    - name: add private key
       run: |
-        git branch
-        git status
+        mkdir ~/.ssh
+        chmod 700 ~/.ssh
+        echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/id_rsa
+        chmod 600 ~/.ssh/id_rsa
+    - name: git config
+      run: |
+        git config --global user.name $GIT_NAME
+        git config --global user.email $GIT_MAILADDRESS
+    - name: mirror
+      run: |
+        git push --mirror $MIRROR_REPOSITORY
