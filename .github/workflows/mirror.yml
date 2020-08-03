@@ -11,6 +11,9 @@ jobs:
       GIT_EMAIL: shinnosuke_oyama@citycom.co.jp
     steps:
     - uses: actions/checkout@v2
+      with:
+        fetch-depth: '0'
+        ref: 'master'
     - name: add private key
       run: |
         mkdir ~/.ssh
@@ -23,4 +26,6 @@ jobs:
         git config user.email $GIT_EMAIL
     - name: mirror
       run: |
-        git push --mirror $MIRROR_REPOSITORY
+        git remote add mirror $MIRROR_REPOSITORY
+        git checkout master
+        git push -u mirror master
