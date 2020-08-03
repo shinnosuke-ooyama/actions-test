@@ -20,7 +20,7 @@ jobs:
     - name: git config
       run: |
         git config user.name $GIT_NAME
-        git config user.email $GIT_MAILADDRESS
+        git config user.email $GIT_EMAIL
     - name: mirror
       run: |
         git push --mirror $MIRROR_REPOSITORY
